@@ -34,15 +34,15 @@ class Chat:
         >>> chat.messages == expected
         True
         """
-                
+ 
         self.messages.append({'role': 'user', 'content': message})
         reply = llm(self.messages, temperature=temperature)
         self.messages.append({'role': 'assistant', 'content': reply})
         return reply
 
-def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. You always speak like a pirate.')):
+def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be brief.')):
     """Send a message and retain the reply.
-    >>> from unittest.mock import patch
+    >>> from unittest.mock import MagicMock, patch
     >>> with patch('builtins.input', side_effect=['Hi', EOFError]):
     ...     with patch.object(client.chat.completions, 'create') as request:
     ...         request.return_value.choices[0].message.content = 'Hello!'
@@ -57,12 +57,15 @@ def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. You a
     ... ]
     >>> test.messages == expected
     True
-    >>> from unittest.mock import patch
-    >>> with patch('builtins.input', side_effect=['Hi','What are you?', EOFError]):
+    >>> from chat import client, Chat
+    >>> first = MagicMock()
+    >>> first.choices[0].message.content = 'Hello!'
+    >>> second = MagicMock()
+    >>> second.choices[0].message.content = 'I am a chat bot.'
+    >>> with patch('builtins.input', side_effect=['Hi', 'What are you?', EOFError]):
     ...     with patch.object(client.chat.completions, 'create') as request:
+    ...         request.side_effect=[first, second]
     ...         test = Chat(system='Be brief.')
-    ...         request.return_value.choices[0].message.content = 'Hello!'
-    ...         request.return_value.choices[0].message.content = 'I am a chat bot.'
     ...         repl(temperature=0, chat = test)
     Hello!
     I am a chat bot.
@@ -81,7 +84,6 @@ def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. You a
     try:
         while True:
             user_input = input('chat> ')
-            #print(user_input)
             print(chat.send_message(user_input, temperature=temperature))
     except (KeyboardInterrupt, EOFError):
         print()
