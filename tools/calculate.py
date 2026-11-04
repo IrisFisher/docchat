@@ -5,12 +5,11 @@ with open("tools/tools.json", encoding='utf-8') as f:
 
 def calculate(expression):
     """Evaluate a mathematical expression"""
-    try:
-        result = eval(expression)  # Use safe evaluation in production
-        return json.dumps({"result": result})
-    except:
-        return json.dumps({"error": "Invalid expression"})
-
+    for char in str(expression):
+        if char not in '1234567890()+-/*= ':
+            return json.dumps({"error": "Invalid expression"})
+    result = eval(expression)  # Use safe evaluation in production
+    return json.dumps({"result": result})
 
 available_functions = {
     "calculate": calculate,
