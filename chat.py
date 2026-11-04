@@ -1,17 +1,56 @@
 import os
 from dotenv import load_dotenv
 from groq import Groq
+import json
+from tools.calculate import calculate
 
 load_dotenv()
-client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
-def llm(messages, temperature=1):
+def llm(messages, tool_choice="auto", temperature=1):
+    """Call llm"""
+    client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
+
+    with open('tools/tools.json', encoding='utf-8') as f:
+        tools = json.load(f)
+
     completion = client.chat.completions.create(
-        messages=messages,
         model='openai/gpt-oss-20b',
+        messages=messages,
+        tools = tools,
+        tool_choice = tool_choice,
         temperature=temperature,
-    )
-    return completion.choices[0].message.content
+    )       
+    return completion.choices[0].message
+
+
+def execute_tool_calls(messages, tool_calls):
+    """Parse and execute tool calls"""
+
+    available_functions = {
+    "calculate": calculate,
+    # Add more tools here as you build them
+    # "get_weather": get_weather,
+    # "search_database": search_database,
+    }
+
+    for tool_call in tool_calls:
+        function_name = tool_call.function.name
+        function_to_call = available_functions[function_name]
+        function_args = json.loads(tool_call.function.arguments)
+        function_response = function_to_call(**function_args)
+
+        messages.append(
+            {
+                "role": "tool",
+                "content": str(function_response),
+                "name": tool_call.function.name,
+                "tool_call_id": tool_call.id,
+            }
+        )
+
+    final_response = llm(messages, tool_choice="none", temperature=0.5)
+    return final_response.content
+
 
 class Chat:
     def __init__(self, system='You are a helpful assistant.'):
@@ -36,9 +75,14 @@ class Chat:
         """
  
         self.messages.append({'role': 'user', 'content': message})
-        reply = llm(self.messages, temperature=temperature)
+        self.tool_calls = llm(self.messages, temperature=0.5).tool_calls
+        if llm(self.messages,temperature=0.5).tool_calls:
+            reply = execute_tool_calls(self.messages, self.tool_calls)
+        else:
+            reply = llm(self.messages, temperature=temperature).content
         self.messages.append({'role': 'assistant', 'content': reply})
         return reply
+
 
 def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be brief.')):
     """Send a message and retain the reply.
@@ -84,7 +128,7 @@ def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be br
     try:
         while True:
             user_input = input('chat> ')
-            print(chat.send_message(user_input, temperature=temperature))
+            print(chat.send_message(str(user_input), temperature=temperature))
     except (KeyboardInterrupt, EOFError):
         print()
 
