@@ -5,12 +5,11 @@ import glob
     #tools = json.load(f)
     #print(tools)
 
-def ls(folder='*'):
+def ls(folder=None):
     """Lists all of the files in a folder"""
     if not folder:
-        folder = '*'
-    print(folder)
+        folder = None
     result = ''
-    for name in sorted(glob.glob(folder)):
+    for name in sorted(glob.glob('*', root_dir=folder)):
         result = result + name + '  '
     return json.dumps({"result": result})

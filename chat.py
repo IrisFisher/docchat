@@ -49,7 +49,7 @@ def execute_tool_calls(messages, tool_calls):
                 "tool_call_id": tool_call.id,
             }
         )
-    print(messages)
+    #print(messages)
     final_response = llm(messages, tool_choice="none", temperature=0.5)
     return final_response.content
 
