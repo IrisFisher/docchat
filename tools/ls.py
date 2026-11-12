@@ -12,5 +12,5 @@ def ls(folder='*'):
     print(folder)
     result = ''
     for name in sorted(glob.glob(folder)):
-        result = result + name + '\t'
+        result = result + name + '  '
     return json.dumps({"result": result})
