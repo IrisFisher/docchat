@@ -14,4 +14,20 @@
             "required": ["expression"]
         }
     }
+},
+{
+    "type": "function",
+    "function": {
+        "name": "ls",
+        "description": "Lists all of the files in a folder",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "folder": {
+                    "type": "string",
+                    "description": "The folder to list the files from"
+                }
+            }
+        }
+    }
 }]

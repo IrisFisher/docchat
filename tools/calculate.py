@@ -11,12 +11,12 @@ def calculate(expression):
     result = eval(expression)  # Use safe evaluation in production
     return json.dumps({"result": result})
 
-available_functions = {
-    "calculate": calculate,
+#available_functions = {
+    #"calculate": calculate,
     # Add more tools here as you build them
     # "get_weather": get_weather,
     # "search_database": search_database,
-}
+#}
 
 def execute_tool_call(tool_call):
     """Parse and execute a single tool call"""

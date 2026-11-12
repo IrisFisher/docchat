@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from groq import Groq
 import json
 from tools.calculate import calculate
+from tools.ls import ls
 
 load_dotenv()
 
@@ -28,6 +29,7 @@ def execute_tool_calls(messages, tool_calls):
 
     available_functions = {
     "calculate": calculate,
+    "ls": ls,
     # Add more tools here as you build them
     # "get_weather": get_weather,
     # "search_database": search_database,
@@ -47,7 +49,7 @@ def execute_tool_calls(messages, tool_calls):
                 "tool_call_id": tool_call.id,
             }
         )
-
+    print(messages)
     final_response = llm(messages, tool_choice="none", temperature=0.5)
     return final_response.content
 
