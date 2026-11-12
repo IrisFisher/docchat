@@ -10,6 +10,6 @@ def ls(folder=None):
     if not folder:
         folder = None
     result = ''
-    for name in sorted(glob.glob('*', root_dir=folder)):
-        result = result + name + '  '
-    return json.dumps({"result": result})
+    #for name in sorted(glob.glob('*', root_dir=folder)):
+        #result = result + name + '  '
+    return json.dumps({"result": sorted(glob.glob('*', root_dir=folder))})
