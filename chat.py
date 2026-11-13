@@ -12,7 +12,7 @@ load_dotenv()
 def llm(messages, tool_choice="auto", temperature=1):
     """Call llm"""
     client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
-    
+
     tools = [{"type": "function",
                 "function": {
                     "name": "calculate",
@@ -97,7 +97,7 @@ def execute_tool_calls(messages, tool_calls):
             }
         )
     final_response = llm(messages, tool_choice="none", temperature=0.5)
-    return final_response.content
+    return str(function_response), final_response.content
 
 
 class Chat:
@@ -125,8 +125,8 @@ class Chat:
         self.messages.append({'role': 'user', 'content': message})
         self.tool_calls = llm(self.messages, temperature=0).tool_calls
         if self.tool_calls:
-            #print('tool call:', self.tool_calls)
-            reply = execute_tool_calls(self.messages, self.tool_calls)
+            tool_response, reply = execute_tool_calls(self.messages, self.tool_calls)
+            self.messages.append({'role': 'assistant', 'content': tool_response})
         else:
             reply = llm(self.messages, temperature=temperature).content
         self.messages.append({'role': 'assistant', 'content': reply})
