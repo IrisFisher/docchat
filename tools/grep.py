@@ -1,6 +1,6 @@
 import glob
 import re
-from is_path_safe import is_path_safe
+from tools.is_path_safe import is_path_safe
 
 #python -m doctest -v tools/grep.py 
 

@@ -12,9 +12,55 @@ load_dotenv()
 def llm(messages, tool_choice="auto", temperature=1):
     """Call llm"""
     client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
-
-    with open('tools/tools.json', encoding='utf-8') as f:
-        tools = json.load(f)
+    
+    tools = [{"type": "function",
+                "function": {
+                    "name": "calculate",
+                    "description": "Evaluate a mathematical expression",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "expression": {
+                                "type": "string",
+                                "description": "The mathematical expression to evaluate"
+                            }
+                        },
+                        "required": ["expression"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "ls",
+                    "description": "Lists all of the files in a folder",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "folder": {
+                                "type": "string",
+                                "description": "The folder to list the files from"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "cat",
+                    "description": "Open a file and print its contents.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "file": {
+                                "type": "string",
+                                "description": "The file to be opened."
+                            }
+                        }
+                    }
+                }
+            }]
 
     completion = client.chat.completions.create(
         model='openai/gpt-oss-20b',

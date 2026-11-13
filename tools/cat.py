@@ -1,5 +1,4 @@
-import json
-from is_path_safe import is_path_safe
+from tools.is_path_safe import is_path_safe
 
 def cat(file):
     """Opens a file and outpus its contents"""

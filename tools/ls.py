@@ -1,10 +1,6 @@
 import json
 import glob
-from is_path_safe import is_path_safe
-
-#with open("tools/tools.json", encoding='utf-8') as f:
-    #tools = json.load(f)
-    #print(tools)
+from tools.is_path_safe import is_path_safe
 
 def ls(folder=None):
     
