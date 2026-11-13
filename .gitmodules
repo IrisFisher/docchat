@@ -1,0 +1,9 @@
+[submodule "test_projects/discoveries_in_the_tidepools"]
+	path = test_projects/discoveries_in_the_tidepools
+	url = https://github.com/IrisFisher/discoveries_in_the_tidepools.git
+[submodule "test_projects/markdown-compiler"]
+	path = test_projects/markdown-compiler
+	url = https://github.com/IrisFisher/markdown-compiler.git
+[submodule "test_projects/ebay-scraper"]
+	path = test_projects/ebay-scraper
+	url = https://github.com/IrisFisher/ebay-scraper.git
