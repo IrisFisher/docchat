@@ -1,5 +1,6 @@
 import glob
 import re
+from is_path_safe import is_path_safe
 
 #python -m doctest -v tools/grep.py 
 
@@ -10,19 +11,16 @@ def grep(regex, path):
     ['this is a tester']
     """
     
-
-    try:
-        assert path[0] != '/' or path != '..'
-        result = []
-        for file in glob.glob(path):
-            with open(file, encoding = 'utf-8') as f:
-                for line in f:
-                    if re.search((regex),line) != None:
-                        result.append(line)
-        return result
-    except FileNotFoundError:
-        return('Error: File not found.')
-    except UnicodeDecodeError:
-        return('Error: Could not decode file with utf-8')
-    except AssertionError:
-        return('Sorry, you can not read files outside of the current folder.')
+    if is_path_safe(path):
+        try:
+            result = []
+            for file in glob.glob(path):
+                with open(file, encoding = 'utf-8') as f:
+                    for line in f:
+                        if re.search((regex),line) != None:
+                            result.append(line)
+            return result
+        except FileNotFoundError:
+            return('Error: File not found.')
+        except UnicodeDecodeError:
+            return('Error: Could not decode file with utf-8')
