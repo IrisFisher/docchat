@@ -97,7 +97,7 @@ def execute_tool_calls(messages, tool_calls):
             }
         )
     final_response = llm(messages, tool_choice="none", temperature=0.5)
-    return str(function_response), final_response.content
+    return messages, final_response.content
 
 
 class Chat:
@@ -125,8 +125,8 @@ class Chat:
         self.messages.append({'role': 'user', 'content': message})
         self.tool_calls = llm(self.messages, temperature=0).tool_calls
         if self.tool_calls:
-            tool_response, reply = execute_tool_calls(self.messages, self.tool_calls)
-            self.messages.append({'role': 'assistant', 'content': tool_response})
+            messages, reply = execute_tool_calls(self.messages, self.tool_calls)
+            self.messages = messages
         else:
             reply = llm(self.messages, temperature=temperature).content
         self.messages.append({'role': 'assistant', 'content': reply})
