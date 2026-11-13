@@ -9,58 +9,79 @@ from tools.grep import grep
 
 load_dotenv()
 
+tools = [{"type": "function",
+            "function": {
+                "name": "calculate",
+                "description": "Evaluate a mathematical expression",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "expression": {
+                            "type": "string",
+                            "description": "The mathematical expression to evaluate"
+                        }
+                    },
+                    "required": ["expression"]
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "ls",
+                "description": "Lists all of the files in a folder",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "folder": {
+                            "type": "string",
+                            "description": "The folder to list the files from"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "cat",
+                "description": "Open a file and print its contents.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "file": {
+                            "type": "string",
+                            "description": "The file to be opened."
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "function",
+            "function": {
+                "name": "grep",
+                "description": "Returns each line from a set of files which contains a regular expression.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "regex": {
+                            "type": "string",
+                            "description": "The regular expression you are searching for."
+                        },
+                        "path": {
+                            "type": "string",
+                            "description": "The path of the files you are searching in."
+                        }
+                    }
+                }
+            }
+        }]
+
+
 def llm(messages, tool_choice="auto", temperature=1):
     """Call llm"""
     client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
-
-    tools = [{"type": "function",
-                "function": {
-                    "name": "calculate",
-                    "description": "Evaluate a mathematical expression",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "expression": {
-                                "type": "string",
-                                "description": "The mathematical expression to evaluate"
-                            }
-                        },
-                        "required": ["expression"]
-                    }
-                }
-            },
-            {
-                "type": "function",
-                "function": {
-                    "name": "ls",
-                    "description": "Lists all of the files in a folder",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "folder": {
-                                "type": "string",
-                                "description": "The folder to list the files from"
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "type": "function",
-                "function": {
-                    "name": "cat",
-                    "description": "Open a file and print its contents.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "file": {
-                                "type": "string",
-                                "description": "The file to be opened."
-                            }
-                        }
-                    }
-                }
-            }]
 
     completion = client.chat.completions.create(
         model='openai/gpt-oss-20b',
@@ -72,9 +93,7 @@ def llm(messages, tool_choice="auto", temperature=1):
     return completion.choices[0].message
 
 
-def execute_tool_calls(messages, tool_calls):
-    """Parse and execute tool calls"""
-
+def call_tools(messages, tool_call):
     available_functions = {
     "calculate": calculate,
     "ls": ls,
@@ -82,20 +101,27 @@ def execute_tool_calls(messages, tool_calls):
     "grep": grep,
     }
 
-    for tool_call in tool_calls:
-        function_name = tool_call.function.name
-        function_to_call = available_functions[function_name]
-        function_args = json.loads(tool_call.function.arguments)
-        function_response = function_to_call(**function_args)
+    function_name = tool_call.function.name
+    function_to_call = available_functions[function_name]
+    function_args = json.loads(tool_call.function.arguments)
+    function_response = function_to_call(**function_args)
 
-        messages.append(
-            {
-                "role": "tool",
-                "content": str(function_response),
-                "name": tool_call.function.name,
-                "tool_call_id": tool_call.id,
-            }
-        )
+    messages.append(
+        {
+            "role": "tool",
+            "content": str(function_response),
+            "name": tool_call.function.name,
+            "tool_call_id": tool_call.id,
+        }
+    )
+    return messages
+
+def execute_tool_calls(messages, tool_calls):
+    """Parse and execute tool calls"""
+
+    for tool_call in tool_calls:
+        messages = call_tools(messages, tool_call)
+
     final_response = llm(messages, tool_choice="none", temperature=0.5)
     return messages, final_response.content
 
@@ -123,13 +149,29 @@ class Chat:
         """
  
         self.messages.append({'role': 'user', 'content': message})
-        self.tool_calls = llm(self.messages, temperature=0).tool_calls
-        if self.tool_calls:
-            messages, reply = execute_tool_calls(self.messages, self.tool_calls)
-            self.messages = messages
+        if "/ls" in message:
+            start = message.find('', message.find('/ls')+3)+1
+            if start != -1:
+                folder = message[start:]
+            else:
+                folder = ''
+            self.messages.append(
+                {
+                "role": "tool",
+                "content": str(ls(folder)),
+                "name": 'ls',
+                "tool_call_id": 'manual_ls_call',
+                }
+            )
+            reply = self.messages[-1]['content']
         else:
-            reply = llm(self.messages, temperature=temperature).content
-        self.messages.append({'role': 'assistant', 'content': reply})
+            self.tool_calls = llm(self.messages, temperature=0).tool_calls
+            if self.tool_calls:
+                messages, reply = execute_tool_calls(self.messages, self.tool_calls)
+                self.messages = messages
+            else:
+                reply = llm(self.messages, temperature=temperature).content
+            self.messages.append({'role': 'assistant', 'content': reply})
         return reply
 
 

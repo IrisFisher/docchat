@@ -9,6 +9,6 @@ def ls(folder=None):
         try:
             if not folder:
                 folder = None
-            return json.dumps({"result": sorted(glob.glob('*', root_dir=folder))})
+            return sorted(glob.glob('*', root_dir=folder))
         except FileNotFoundError:
             return('Error: Folder not found.')
