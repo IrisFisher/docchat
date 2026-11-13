@@ -35,7 +35,7 @@
     "type": "function",
     "function": {
         "name": "cat",
-        "description": "Open a file and output its contents.",
+        "description": "Open a file and print its contents.",
         "parameters": {
             "type": "object",
             "properties": {

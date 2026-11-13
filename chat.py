@@ -5,6 +5,7 @@ import json
 from tools.calculate import calculate
 from tools.ls import ls
 from tools.cat import cat
+from tools.grep import grep
 
 load_dotenv()
 
@@ -32,9 +33,7 @@ def execute_tool_calls(messages, tool_calls):
     "calculate": calculate,
     "ls": ls,
     "cat": cat,
-    # Add more tools here as you build them
-    # "get_weather": get_weather,
-    # "search_database": search_database,
+    "grep": grep,
     }
 
     for tool_call in tool_calls:
@@ -51,7 +50,6 @@ def execute_tool_calls(messages, tool_calls):
                 "tool_call_id": tool_call.id,
             }
         )
-    #print(messages)
     final_response = llm(messages, tool_choice="none", temperature=0.5)
     return final_response.content
 
@@ -79,8 +77,9 @@ class Chat:
         """
  
         self.messages.append({'role': 'user', 'content': message})
-        self.tool_calls = llm(self.messages, temperature=0.5).tool_calls
-        if llm(self.messages,temperature=0.5).tool_calls:
+        self.tool_calls = llm(self.messages, temperature=0).tool_calls
+        if self.tool_calls:
+            #print('tool call:', self.tool_calls)
             reply = execute_tool_calls(self.messages, self.tool_calls)
         else:
             reply = llm(self.messages, temperature=temperature).content
