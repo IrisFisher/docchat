@@ -149,8 +149,20 @@ class Chat:
         """
  
         self.messages.append({'role': 'user', 'content': message})
-        if "/ls" in message:
-            start = message.find('', message.find('/ls')+3)+1
+        if "/calculate" in message:
+            start = message.find(' ', message.find('/calculate')+10)+1
+            expression = message[start:]
+            self.messages.append(
+                {
+                "role": "tool",
+                "content": str(calculate(expression)),
+                "name": 'calculate',
+                "tool_call_id": 'manual_calculate_call',
+                }
+            )
+            reply = self.messages[-1]['content']
+        elif "/ls" in message:
+            start = message.find(' ', message.find('/ls')+3)+1
             if start != -1:
                 folder = message[start:]
             else:
@@ -161,6 +173,33 @@ class Chat:
                 "content": str(ls(folder)),
                 "name": 'ls',
                 "tool_call_id": 'manual_ls_call',
+                }
+            )
+            reply = self.messages[-1]['content']
+        elif "/cat" in message:
+            start = message.find(' ', message.find('/cat')+4)+1
+            file = message[start:]
+            self.messages.append(
+                {
+                "role": "tool",
+                "content": str(cat(file)),
+                "name": 'cat',
+                "tool_call_id": 'manual_cat_call',
+                }
+            )
+            reply = self.messages[-1]['content']
+        elif "/grep" in message:
+            start = message.find(' ', message.find('/grep')+5)+1
+            end = message.find(' ', start+1)
+            regex = message[start:end]
+            path = message[end+1:]
+            print(regex, path)
+            self.messages.append(
+                {
+                "role": "tool",
+                "content": str(grep(regex, path)),
+                "name": 'grep',
+                "tool_call_id": 'manual_grep_call',
                 }
             )
             reply = self.messages[-1]['content']

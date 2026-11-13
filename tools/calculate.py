@@ -6,4 +6,4 @@ def calculate(expression):
         if char not in '1234567890()+-/*= ':
             return json.dumps({"error": "Invalid expression"})
     result = eval(expression)  # Use safe evaluation in production
-    return json.dumps({"result": result})
+    return result
