@@ -30,4 +30,20 @@
             }
         }
     }
+},
+{
+    "type": "function",
+    "function": {
+        "name": "cat",
+        "description": "Open a file and output its contents.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "type": "string",
+                    "description": "The file to be opened."
+                }
+            }
+        }
+    }
 }]

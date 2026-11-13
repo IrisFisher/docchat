@@ -4,6 +4,7 @@ from groq import Groq
 import json
 from tools.calculate import calculate
 from tools.ls import ls
+from tools.cat import cat
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ def execute_tool_calls(messages, tool_calls):
     available_functions = {
     "calculate": calculate,
     "ls": ls,
+    "cat": cat,
     # Add more tools here as you build them
     # "get_weather": get_weather,
     # "search_database": search_database,
