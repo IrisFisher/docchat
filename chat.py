@@ -1,4 +1,5 @@
 """Calls Chat GPT and runs tools."""
+#python -m doctest -v chat.py
 
 import os
 from dotenv import load_dotenv
@@ -82,7 +83,17 @@ tools = [{"type": "function",
 
 
 def llm(messages, tool_choice="auto", temperature=1):
-    """Call llm"""
+    """Call llm
+    >>> from unittest.mock import MagicMock, patch
+    >>> with patch('builtins.input', side_effect=['Hi', EOFError]):
+    ...     with patch.object(client.chat.completions, 'create') as request:
+    ...         request.return_value.choices[0].message.content = 'Hello!'
+    ...         test = llm([{'role': 'system', 'content': 'Be brief.'}, {'role': 'user', 'content': 'Hi'}])
+    ...         print(test)
+    Hello!
+    <BLANKLINE>
+    """
+
     client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
     completion = client.chat.completions.create(
@@ -93,6 +104,7 @@ def llm(messages, tool_choice="auto", temperature=1):
         temperature=temperature,
     )       
     return completion.choices[0].message
+
 
 
 def call_tools(messages, tool_call):
@@ -210,9 +222,7 @@ class Chat:
             )
             reply = self.messages[-1]['content']
         else:
-            tool_logic = llm(self.messages, temperature=0)
-            #print(tool_logic)
-            self.tool_calls = tool_logic.tool_calls
+            self.tool_calls = llm(self.messages, temperature=0).tool_calls
             if self.tool_calls:
                 self.messages.append({'role': 'assistant', 'content': 'Call tool.', 'tool_calls': self.tool_calls})
                 messages, reply = execute_tool_calls(self.messages, self.tool_calls)
@@ -220,12 +230,12 @@ class Chat:
             else:
                 reply = llm(self.messages, temperature=temperature).content
             self.messages.append({'role': 'assistant', 'content': reply})
-            print(self.messages)
         return reply
 
 
 def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be brief.')):
     """Asks for user input and calls chat response.
+    >>> from chat import client, Chat
     >>> from unittest.mock import MagicMock, patch
     >>> with patch('builtins.input', side_effect=['Hi', EOFError]):
     ...     with patch.object(client.chat.completions, 'create') as request:
@@ -241,7 +251,6 @@ def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be br
     ... ]
     >>> test.messages == expected
     True
-    >>> from chat import client, Chat
     >>> first = MagicMock()
     >>> first.choices[0].message.content = 'Hello!'
     >>> second = MagicMock()
