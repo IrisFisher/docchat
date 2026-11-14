@@ -122,7 +122,8 @@ def execute_tool_calls(messages, tool_calls):
     for tool_call in tool_calls:
         messages = call_tools(messages, tool_call)
 
-    final_response = llm(messages, tool_choice="none", temperature=0.5)
+    final_response = llm(messages, tool_choice="none", temperature=0)
+    messages.append(final_response)
     return messages, final_response.content
 
 
@@ -204,13 +205,17 @@ class Chat:
             )
             reply = self.messages[-1]['content']
         else:
-            self.tool_calls = llm(self.messages, temperature=0).tool_calls
+            tool_logic = llm(self.messages, temperature=0)
+            #print(tool_logic)
+            self.tool_calls = tool_logic.tool_calls
             if self.tool_calls:
+                self.messages.append({'role': 'assistant', 'content': tool_logic.reasoning, 'tool_calls': self.tool_calls})
                 messages, reply = execute_tool_calls(self.messages, self.tool_calls)
                 self.messages = messages
             else:
                 reply = llm(self.messages, temperature=temperature).content
             self.messages.append({'role': 'assistant', 'content': reply})
+            print(self.messages)
         return reply
 
 
