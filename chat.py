@@ -108,7 +108,8 @@ def llm(messages, tool_choice="auto", temperature=1):
 
 
 def call_tools(messages, tool_call):
-    """Call tools and append result to messages."""
+    """Call tools and append result to messages.
+    """
     available_functions = {
     "calculate": calculate,
     "ls": ls,
