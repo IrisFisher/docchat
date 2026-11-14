@@ -2,9 +2,8 @@ import glob
 import re
 from tools.is_path_safe import is_path_safe
 
-#python -m doctest -v tools/grep.py 
-
 def grep(regex, path):
+    #python -m doctest -v tools/grep.py 
     """Returns every line in a set of files which matches a regular expression
     
     >>> grep('test','tools/*.txt')

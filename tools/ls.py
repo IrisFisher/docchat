@@ -1,10 +1,12 @@
-import json
 import glob
 from tools.is_path_safe import is_path_safe
 
-def ls(folder=None):
-    
-    """Lists all of the files in a folder"""
+def ls(folder=None):    
+    #python -m doctest -v tools/ls.py
+    """Lists all of the files in a folder
+    >>> ls('tools')
+    ['__pycache__', 'calculate.py', 'cat.py', 'grep.py', 'is_path_safe.py', 'ls.py', 'test_file.txt']
+    """
     if is_path_safe(folder):
         try:
             if not folder:
