@@ -1,1 +1,2 @@
-This project runs ChatGPT by Open-AI.
+# Docchat (with file reading and calculating abilities)
+This project allows you to run ChatGPT by Open-AI and call the tools: calculate, ls, cat and grep, which allow evaluate mathematical expressions, list the files in a folder, read a file, and search for patterns in a file, respecitively.
