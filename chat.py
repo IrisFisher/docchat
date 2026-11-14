@@ -209,7 +209,7 @@ class Chat:
             #print(tool_logic)
             self.tool_calls = tool_logic.tool_calls
             if self.tool_calls:
-                self.messages.append({'role': 'assistant', 'content': tool_logic.reasoning, 'tool_calls': self.tool_calls})
+                self.messages.append({'role': 'assistant', 'content': 'Call tool.', 'tool_calls': self.tool_calls})
                 messages, reply = execute_tool_calls(self.messages, self.tool_calls)
                 self.messages = messages
             else:
