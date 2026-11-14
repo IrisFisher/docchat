@@ -109,7 +109,24 @@ def llm(messages, tool_choice="auto", temperature=1):
 
 def call_tools(messages, tool_call):
     """Call tools and append result to messages.
+    >>> call_tools([{'role': 'system', 'content': 'You are a helpful assistant. Be brief.'}, {'role': 'user', 'content': 'ls'}, {'role': 'assistant', 'content': 'Call tool.', 'tool_calls': [ChatCompletionMessageToolCall(id='fc_ea4434a6-77cf-4bf2-9bfb-8a1ae83e93b5', function=Function(arguments='{"folder":""}', name='ls'), type='function')]}],
+    [ChatCompletionMessageToolCall(id='fc_ea4434a6-77cf-4bf2-9bfb-8a1ae83e93b5', function=Function(arguments='{"folder":""}', name='ls'), type='function')])
+    ```
+    README.md
+    __init__.py
+    __pycache__
+    build
+    chat.py
+    dist
+    docchat.egg-info
+    pyproject.toml
+    requirements.txt
+    test_projects
+    tools
+    ```
     """
+    print(messages)
+    print(tool_call)
     available_functions = {
     "calculate": calculate,
     "ls": ls,
@@ -130,6 +147,7 @@ def call_tools(messages, tool_call):
             "tool_call_id": tool_call.id,
         }
     )
+    print(messages)
     return messages
 
 def execute_tool_calls(messages, tool_calls):
