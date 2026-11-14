@@ -7,7 +7,7 @@ def ls(folder=None):
     #python -m doctest -v tools/ls.py
     """Lists all of the files in a folder
     >>> ls('tools')
-    ['__init__.py', 'calculate.py', 'cat.py', 'grep.py', 'is_path_safe.py', 'ls.py', 'test_file.txt']
+    ['__init__.py', 'calculate.py', 'cat.py', 'grep.py', 'is_path_safe.py', 'ls.py', 'test_file.txt', 'test_photo.jpeg']
     >>> ls()
     ['README.md', '__init__.py', 'chat.py', 'pyproject.toml', 'requirements.txt', 'tools']
     """

@@ -38,13 +38,14 @@ Calling grep manually in test_projects/ebay-scraper.
 $ cd test_projects/ebay-scraper
 $ chat
 chat> \grep "Used planter 1" *.json
+```
 garden tools.json:    "name": "Used planter 1",
 garden tools.json:    "name": "Used planter 10",
 poster.json:    "name": "Used planter 1",
 poster.json:    "name": "Used planter 10",
 stuffed animal.json:    "name": "Used planter 1",
 stuffed animal.json:    "name": "Used planter 10",
-```
+
 This shows how you can call a tool manually. The formatting of the result when called manually may be different the the formatting of the result when called through the agent.
 
 Using calculate in test_projects/markdown-compiler.
