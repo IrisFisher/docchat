@@ -3,7 +3,7 @@ This project allows you to run ChatGPT by Open-AI and call the tools: calculate,
 
 Calling ls through chat in test_projects/discoveries_in_the_tidepools:
 
-```
+``` bash
 $ cd test_projects/discoveries_in_the_tidepools
 $ chat
 chat> ls
@@ -34,7 +34,7 @@ This example shows that ls without an argument returns all the files in the curr
 
 Calling grep manually in test_projects/ebay-scraper.
 
-```
+``` bash
 $ cd test_projects/ebay-scraper
 $ chat
 chat> \grep "Used planter 1" *.json
@@ -49,7 +49,7 @@ This shows how you can call a tool manually. The formatting of the result when c
 
 Using calculate in test_projects/markdown-compiler.
 
-```
+``` bash
 $ cd test_projects/markdown-compiler
 $ chat
 chat> (40*2 + 77)

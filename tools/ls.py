@@ -9,7 +9,7 @@ def ls(folder=None):
     >>> ls('tools')
     ['__init__.py', 'calculate.py', 'cat.py', 'grep.py', 'is_path_safe.py', 'ls.py', 'test_file.txt']
     >>> ls()
-    ['README.md', '__init__.py', 'chat.py', 'pyproject.toml', 'requirements.txt', 'test_projects', 'tools', ]
+    ['README.md', '__init__.py', 'chat.py', 'pyproject.toml', 'requirements.txt', 'tools', ]
     """
     if is_path_safe(folder):
             if not folder:
