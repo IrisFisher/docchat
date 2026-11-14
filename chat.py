@@ -133,13 +133,33 @@ def call_tools(messages, tool_call):
     return messages
 
 def execute_tool_calls(messages, tool_calls):
-    """Parse and execute tool calls"""
-
+    """Parse and execute tool calls
+    >>> messsages, final_response = execute_tool_calls([{'role': 'system', 'content': 'You are a helpful assistant. Be brief.'}, {'role': 'user', 'content': 'ls'}, {'role': 'assistant', 'content': 'Call tool.', 'tool_calls': [ChatCompletionMessageToolCall(id='fc_f5196c6f-3d5f-4d71-af4a-28c967d9569a', function=Function(arguments='{"folder":""}', name='ls'), type='function')]}],
+    [ChatCompletionMessageToolCall(id='fc_f5196c6f-3d5f-4d71-af4a-28c967d9569a', function=Function(arguments='{"folder":""}', name='ls'), type='function')])
+    print(final_response)
+    ```
+    README.md
+    __init__.py
+    __pycache__
+    build
+    chat.py
+    dist
+    docchat.egg-info
+    pyproject.toml
+    requirements.txt
+    test_projects
+    tools
+    ```
+    """
+    print(messages)
+    print(tool_calls)
     for tool_call in tool_calls:
         messages = call_tools(messages, tool_call)
 
     final_response = llm(messages, tool_choice="none", temperature=0)
     messages.append(final_response)
+    print(messages)
+    print(final_response.content)
     return messages, final_response.content
 
 

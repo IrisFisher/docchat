@@ -53,7 +53,7 @@ Using calculate in test_projects/markdown-compiler.
 $ cd test_projects/markdown-compiler
 $ chat
 chat> /ls
-None
+['README.md', 'example', 'markdown_compiler', 'markdown_compiler.egg-info', 'pyproject.toml', 'requirements.txt']
 chat> (40*2 + 77)
 157
 chat> Subtract 45 from the previous result
