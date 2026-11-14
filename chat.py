@@ -182,9 +182,14 @@ def execute_tool_calls(messages, tool_calls):
 
 
 class Chat:
-    """Chat object. Sends messages, recieves the response and saves message history."""
+    """Chat object. Sends messages, recieves the response and saves message history.
+    >>> (Chat(system='You are a helpful assistant. Be brief.'))
+    Chat.messages==[{'role': 'You are a helpful assistant. Be brief.', 'content': system}]
+    True"""
     def __init__(self, system='You are a helpful assistant.'):
-        """Initializes a chat session."""
+        """Initializes a chat session.
+        >>> Chat.messages==[{'role': 'You are a helpful assistant. Be brief.', 'content': system}]
+        True"""
         self.messages = [{'role': 'system', 'content': system}]
 
     def send_message(self, message, temperature=0.8):
