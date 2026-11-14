@@ -6,11 +6,10 @@ def ls(folder=None):
     """Lists all of the files in a folder
     >>> ls('tools')
     ['calculate.py', 'cat.py', 'grep.py', 'is_path_safe.py', 'ls.py', 'test_file.txt']
+    >>> ls()
+    ['README.md', 'chat.py', 'pyproject.toml', 'requirements.txt', 'test_projects', 'tools', ]
     """
     if is_path_safe(folder):
-        try:
             if not folder:
                 folder = None
             return sorted(glob.glob('*', root_dir=folder))
-        except FileNotFoundError:
-            return('Error: Folder not found.')
