@@ -1,3 +1,5 @@
+"""Defines grep tool."""
+
 import glob
 import re
 from tools.is_path_safe import is_path_safe

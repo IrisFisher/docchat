@@ -1,3 +1,5 @@
+"""Defines is_path_safe function."""
+
 def is_path_safe(path):
     """Checks if path is safe (inside current working repository)."""
     if path:

@@ -1,3 +1,5 @@
+"""Calls Chat GPT and runs tools."""
+
 import os
 from dotenv import load_dotenv
 from groq import Groq
@@ -94,6 +96,7 @@ def llm(messages, tool_choice="auto", temperature=1):
 
 
 def call_tools(messages, tool_call):
+    """Call tools and append result to messages."""
     available_functions = {
     "calculate": calculate,
     "ls": ls,
@@ -128,7 +131,9 @@ def execute_tool_calls(messages, tool_calls):
 
 
 class Chat:
+    """Chat object. Sends messages, recieves the response and saves message history."""
     def __init__(self, system='You are a helpful assistant.'):
+        """Initializes a chat session."""
         self.messages = [{'role': 'system', 'content': system}]
 
     def send_message(self, message, temperature=0.8):
@@ -220,7 +225,7 @@ class Chat:
 
 
 def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be brief.')):
-    """Send a message and retain the reply.
+    """Asks for user input and calls chat response.
     >>> from unittest.mock import MagicMock, patch
     >>> with patch('builtins.input', side_effect=['Hi', EOFError]):
     ...     with patch.object(client.chat.completions, 'create') as request:
@@ -268,4 +273,5 @@ def repl(temperature=0.8, chat = Chat(system='You are a helpful assistant. Be br
         print()
 
 if __name__ == '__main__':
+    """Initializes chat."""
     repl()

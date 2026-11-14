@@ -1,3 +1,5 @@
+"""Defines cat tool."""
+
 from tools.is_path_safe import is_path_safe
 
 def cat(file):

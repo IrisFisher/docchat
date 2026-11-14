@@ -1,4 +1,4 @@
-import json
+"""Defines calculate tool."""
 
 def calculate(expression):
     #python -m doctest -v tools/calculate.py
