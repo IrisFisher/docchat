@@ -13,15 +13,10 @@ def grep(regex, path):
     """
     
     if is_path_safe(path):
-        try:
-            result = []
-            for file in glob.glob(path):
-                with open(file, encoding = 'utf-8') as f:
-                    for line in f:
-                        if re.search((regex),line) != None:
-                            result.append(line)
-            return result
-        except FileNotFoundError:
-            return('Error: File not found.')
-        except UnicodeDecodeError:
-            return('Error: Could not decode file with utf-8')
+        result = []
+        for file in glob.glob(path):
+            with open(file, encoding = 'utf-8') as f:
+                for line in f:
+                    if re.search((regex),line) != None:
+                        result.append(line)
+        return result

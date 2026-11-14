@@ -7,6 +7,10 @@ def cat(file):
     """Opens a file and outpus its contents
     >>> cat('tools/test_file.txt')
     'this is a tester'
+    >>> cat('hello.py')
+    'Error: File not found.'
+    >>> cat('tools/test_photo.jpeg')
+    'Error: Could not decode file with utf-8'
     """
     if is_path_safe(file):
         try:

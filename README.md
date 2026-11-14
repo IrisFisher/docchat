@@ -49,7 +49,7 @@ This shows how you can call a tool manually. The formatting of the result when c
 
 Using calculate in test_projects/markdown-compiler.
 
-``` bash
+```
 $ cd test_projects/markdown-compiler
 $ chat
 chat> (40*2 + 77)
